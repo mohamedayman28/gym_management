@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+  <table class="table mb-5">
+    <a class="btn btn-success mt-5" href="{% url 'member_form' %}" role="button">Add Member</a>
+    <thead>
+      <tr>
+        <th scope="col">Member ID</th>
+        <th scope="col">Member Name</th>
+        <th scope="col">Gender</th>
+        <th scope="col">Enrolled date</th>
+        <th scope="col">End date</th>
+        <th scope="col">Remaining day(s)</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for member in members %}
+      <tr>
+        <!-- Member ID -->
+        <th scope="row">{{ member.id }}</th>
+        <!-- Member name -->
+        <td>{{ member.first_name }} {{ member.last_name }}</td>
+        <!-- Gender -->
+        <td>{{ member.get_gender }}</td>
+        <!-- Enrolled date -->
+        <td>{{ member.enrolled_date }}</td>
+        <!-- End date -->
+        <td>{{ member.end_date }}</td>
+        <!-- Remaining day(s) -->
+        <td class="text-center">{{ member.get_remaining_days }}</td>
+        <td><a href="#">Update</a></td>
+        <td><a href="#" class="text-muted">delete</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock content %}
