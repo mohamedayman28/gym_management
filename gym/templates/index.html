@@ -2,7 +2,7 @@
 {% block content %}
 <div class="container">
   <table class="table mb-5">
-    <a class="btn btn-success mt-5" href="{% url 'member_form' %}" role="button">Add Member</a>
+    <a class="btn btn-success mt-5" href="{% url 'gym:member_form' %}" role="button">Add Member</a>
     <thead>
       <tr>
         <th scope="col">Member ID</th>
@@ -21,15 +21,15 @@
         <!-- Member name -->
         <td>{{ member.first_name }} {{ member.last_name }}</td>
         <!-- Gender -->
-        <td>{{ member.get_gender }}</td>
+        <td>{{ member.get_gender_name }}</td>
         <!-- Enrolled date -->
         <td>{{ member.enrolled_date }}</td>
         <!-- End date -->
         <td>{{ member.end_date }}</td>
         <!-- Remaining day(s) -->
         <td class="text-center">{{ member.get_remaining_days }}</td>
-        <td><a href="#">Update</a></td>
-        <td><a href="#" class="text-muted">delete</a></td>
+        <td><a href="{% url 'gym:member_update' member.pk %}">Update</a></td>
+        <td><a href="{% url 'gym:member_delete' member.pk %}" class="text-danger">delete</a></td>
       </tr>
       {% endfor %}
     </tbody>

@@ -8,18 +8,20 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 
+class test(models.Model):
+    name = models.CharField(max_length=10)
+
+
 class Member(models.Model):
-    # See overridden clean().
-    is_cleaned = False
-    # Choices constant
     MALE = 'ml'
     FEMALE = 'fl'
     GENDERS = [
         (MALE, 'Male'),
         (FEMALE, 'Female')
     ]
+
     # Relations
-    member = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     # Attributes
     first_name = models.CharField(max_length=10)
     last_name = models.CharField(max_length=10)
@@ -34,8 +36,9 @@ class Member(models.Model):
     def __str__(self):
         return '{} {}'.format(self.first_name, self.last_name)
 
+    is_cleaned = False
+
     def clean(self):
-        # See overridden save().
         self.is_cleaned = True
         raise_message = 'The date must be in the future by at least one day.'
         if self.end_date <= (self.enrolled_date):
@@ -43,24 +46,25 @@ class Member(models.Model):
 
     def save(self, *args, **kwargs):
         """
-        Make sure clean() is called in case of calling individual save(), e.g.
-        save instance from a shell.
+        Create fields validation in case of calling save() out of form, for
+        example calling save() from within a Django shell.
         """
-        # If clean() not called, call it and save().
         if self.is_cleaned is False:
             self.full_clean()
-        super().save(*args, **kwargs)
+        else:
+            super().save(*args, **kwargs)
 
     def get_remaining_days(self):
         """
-        Return remaining days, as number, between enrolled date and end date.
+        Return remaining days, as number, between self.enrolled_date and
+        self.end_date.
         """
         try:
             return (self.end_date - self.enrolled_date).days
         except AttributeError as e:
             print(e)
 
-    def get_gender(self):
+    def get_gender_name(self):
         if self.gender == 'ml':
             return 'Male'
         elif self.gender == 'fl':

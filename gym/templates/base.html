@@ -1,56 +1,69 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
+  <title>Gym</title>
 
-    <title>Gym</title>
-
-    <!-- Core theme CSS (includes Bootstrap)-->
-    <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
+  <link rel="stylesheet" href="{% static 'css/stylesheet.css' %}">
 </head>
 
-<body id="page-top">
-    <!-- Navigation-->
-    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
-        <div class="container px-5">
-            <a class="navbar-brand" href="{% url 'home_page' %}">Gym Management</a>
-            <ul class="navbar-nav ms-auto">
-                <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
-                    <input type="search" class="form-control form-control-dark" placeholder="Search..."
-                        aria-label="Search">
-                </form>
-                <div class="text-end">
-                    <button type="button" class="btn btn-warning">Logout</button>
-                </div>
-            </ul>
-        </div>
-    </nav>
+<body>
+  <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand" href="{% url 'gym:index' %}">Gym Management</a>
 
-    <!-- Header-->
-    <header class="masthead text-center text-white">
-        <div class="masthead-content">
-            <div class="container px-5">
-                <h2 class="masthead-subheading mb-0">Gym Management</h2>
-            </div>
-        </div>
-        <div class="bg-circle-1 bg-circle"></div>
-        <div class="bg-circle-2 bg-circle"></div>
-        <div class="bg-circle-3 bg-circle"></div>
-        <div class="bg-circle-4 bg-circle"></div>
-    </header>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+        aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
 
-    {% block content%}{% endblock content %}
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav mr-auto">
+          {# Home page #}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'gym:index' %}">Home</a>
+          </li>
 
-    <!-- Footer-->
-    <footer class="py-5 bg-black">
-        <div class="container px-5">
-            <p class="m-0 text-center text-white small">Copyright &copy; Your Website {% now "Y" %}</p>
-        </div>
-    </footer>
-    <!-- Bootstrap core JS-->
-    <script src="{% static 'js/bootstrap-cdn.js' %}"></script>
+          {# Add new member page #}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'gym:member_form' %}">Add Member</a>
+          </li>
+
+          {# Logout page #}
+          {% if user.is_authenticated %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'gym:logout' %}">Logout</a>
+            </li>
+          {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'gym:login' %}">Login</a>
+            </li>
+          {% endif %}
+
+          {# Go to admin link #}
+          {% if user.is_superuser %}
+          <li class="nav-item">
+            <a class="nav-link" target="_blank" href="{% url 'admin:index' %}">Admin</a>
+          </li>
+          {% endif %}
+        </ul>
+
+        {# Search form #}
+        <form class="form-inline mt-2 mt-md-0">
+          <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+      </div>
+    </div>
+  </nav>
+
+  <main role="main" class="container">
+    {% block content %}{% endblock content %}
+  </main>
+
+  <!-- Bootstrap core JS-->
+  <script src="{% static 'js/bootstrap-cdn.js' %}"></script>
 </body>
 
 </html>

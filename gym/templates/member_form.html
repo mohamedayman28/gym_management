@@ -1,9 +1,114 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% comment %}
+  This template is related to:
+  * MemberFormView
+  * MemberUpdateView
+{% endcomment %}
+
+{% load static %}
 
 {% block content %}
-<form action="{% url 'member_add' %}" method='POST'>
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Add member">
-</form>
+<div class="container px-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card border-0 rounded-3 shadow-lg">
+        <div class="card-body p-4">
+          <div class="text-center">
+            <p>{{ form.non_field_errors }}</p>
+          </div>
+
+          {% with request.resolver_match as match %}
+              {% if match.url_name == 'member_update' %}
+                <form method="POST" action="{% url 'gym:member_update' form.instance.pk %}">
+              {% else %}
+                <form method="POST" action="{% url 'gym:member_form' %}">
+              {% endif %}
+            {% endwith %}
+              {% csrf_token %}
+
+              <!-- User input -->
+              <div class="form-floating mb-3">
+                <label class="mr-sm-2" for="{{ form.user.id_for_label }}">{{ form.user.label }}</label>
+                <select class="custom-select mr-sm-2" id="{{ form.user.id_for_label }}"
+                  style="cursor: pointer" name="user">
+                  {% for choice in form.user %}
+                    {{ choice }}
+                  {% endfor %}
+                </select>
+                <small class=" form-text text-danger">{{ form.user.errors }}</small>
+              </div>
+
+              <!-- First name input -->
+              <div class="form-floating mb-3">
+                <label for="{{ form.first_name.id_for_label }}">{{ form.first_name.label }}</label>
+                <input class="form-control" id="{{ form.first_name.id_for_label }}"
+                  placeholder="{{ form.first_name.label }}" name="first_name"
+                  value="{% if form.first_name.value %}{{ form.first_name.value }}{% endif %}">
+                <small class="form-text text-danger">{{ form.last_name.errors }}</small>
+              </div>
+
+              <!-- Last name input -->
+              <div class="form-floating mb-3">
+                <label for="{{ form.last_name.id_for_label }}">{{ form.last_name.label }}</label>
+                <input class="form-control" id="{{ form.last_name.id_for_label }}"
+                  placeholder="{{ form.last_name.label }}" name="last_name"
+                  value="{% if form.last_name.value %}{{ form.last_name.value }}{% endif %}">
+                <small class="form-text text-danger">{{ form.last_name.errors }}</small>
+              </div>
+
+              <!-- Gender input -->
+              <div class="form-floating mb-3">
+                <label class="mr-sm-2" for="{{ form.gender.id_for_label }}">{{ form.gender.label }}</label>
+                <select class="custom-select mr-sm-2" id="{{ form.gender.id_for_label }}"
+                  style="cursor: pointer" name="gender">
+                  <option selected>...</option>
+                  {% for choice in form.gender %}
+                    {{ choice }}
+                  {% endfor %}
+                </select>
+                <small class="form-text text-danger">{{ form.gender.errors }}</small>
+              </div>
+
+              <!-- Enrolled date input -->
+              <div class="form-floating mb-3">
+                <label for="{{ form.enrolled_date.id_for_label }}">{{ form.enrolled_date.label }}</label>
+                <input class="form-control" id="{{ form.enrolled_date.id_for_label }}"
+                  placeholder="{{ form.enrolled_date.label }}" name="enrolled_date"
+                  type="date" style="cursor: pointer"
+                  value="{% if form.enrolled_date.value %}{{ form.enrolled_date.value|date:"Y-m-d" }}{% endif %}">
+                <small class="form-text text-danger">{{ form.enrolled_date.errors }}</small>
+              </div>
+
+              <!-- End date input -->
+              <div class="form-floating mb-3">
+                <label for="{{ form.end_date.id_for_label }}">{{ form.end_date.label }}</label>
+                <input class="form-control" id="{{ form.end_date.id_for_label }}"
+                  placeholder="{{ form.end_date.label }}" name="end_date"
+                  type="date" style="cursor: pointer"
+                  value="{% if form.end_date.value %}{{ form.end_date.value|date:"Y-m-d" }}{% endif %}">
+                <small class="form-text text-danger">{{ form.end_date.errors }}</small>
+              </div>
+
+
+              <!-- Submit button -->
+              <div class="d-grid">
+                {% with request.resolver_match as match %}
+                {% if match.url_name == "member_update" %}
+                <button class="btn btn-primary btn-lg" id="submitButton" type="submit">Update</button>
+                {% else%}
+                <button class="btn btn-primary btn-lg" id="submitButton" type="submit">Add</button>
+                {% endif %}
+                {% endwith %}
+              </div>
+
+            </form>
+            <!-- End of contact form -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 {% endblock content %}
