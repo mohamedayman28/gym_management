@@ -40,13 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # Local apps
     'gym.apps.GymConfig',
-    # Third party: Django toolbar
-    'debug_toolbar',
 ]
 
 MIDDLEWARE = [
-    # Third party: Django toolbar
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
     # Django
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

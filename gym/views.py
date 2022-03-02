@@ -27,7 +27,6 @@ class MemberFormView(LoginRequiredMixin, CreateView):
 class MemberDeleteView(LoginRequiredMixin, DeleteView):
     # Redirect unauthenticated user.
     login_url = reverse_lazy('gym:login')
-    template_name = 'member_confirm_delete.html'
     model = Member
     template_name_field = 'member'
     # Redirect after successful delete.

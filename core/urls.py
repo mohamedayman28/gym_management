@@ -19,8 +19,6 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
-# Third party
-from debug_toolbar import urls  # isort:skip
 
 
 urlpatterns = [
@@ -28,6 +26,4 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     # Local apps
     path('', include('gym.urls')),
-    # Third party
-    path('__debug__', include(urls)),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

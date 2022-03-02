@@ -1,14 +1,17 @@
 # Django Gym Management
 
-**NOTE:** The app in the development process.
+Django + htmx(Ajax library) CRUD app that covers:
 
-Django + HTMX(Ajax library) CRUD app that covers:
+* CBV.
+* TDD for the CBV.
+* Ajax calls.
+* API using DRF. **Yet to finish**
+* TDD for the API. **Yet to finish**
+* Search mechanism. **Yet to finish**
 
-* CBV(Class Based View)
-* TDD(Test Driven Development) implemented for CBV.
-* Implementing Ajax on HTML.
-* RESTful API. **Yet to finish**
-* TDD(Test Driven Development) implemented on RESTful API. **Yet to finish**
+## Ajax (htmx) example
+
+![htmx example](https://github.com/mohamedayman28/gym_management/blob/main/gif_htmx.gif)
 
 ## Setting up locally
 

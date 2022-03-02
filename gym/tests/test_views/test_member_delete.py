@@ -40,11 +40,6 @@ class MemberDeleteViewTests(TestCase):
         expected_namespace = reverse('gym:login')
         self.assertEqual(namespace, expected_namespace)
 
-    def test_template_name_attribute_assigned_to_member_confirm_delete_string(self):
-        string = self.view_class.template_name
-        expected_string = 'member_confirm_delete.html'
-        self.assertEqual(string, expected_string)
-
     def test_model_attribute_assigned_to_Member_model(self):
         model = self.view_class.model
         expected_model = Member
