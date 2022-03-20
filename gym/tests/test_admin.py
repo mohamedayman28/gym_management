@@ -11,17 +11,7 @@ from gym.models import Member
 from mixer.backend.django import mixer
 
 
-class MemberAdminTests(TestCase):
-    def setUp(self):
-        admin_site = AdminSite()
-        self.admin = MemberAdmin(Member, admin_site)
-        # NOTE: Mixer sets models.field(default) if no value assigned.
-        self.member = mixer.blend(
-            'gym.Member',
-            is_cleaned=True,  # Call save() default behavior.
-            end_date=datetime.datetime.now() + datetime.timedelta(days=1)
-        )
-
+class MemberModelRegistrationTests(TestCase):
     def test_Member_model_is_registered(self):
         self.assertTrue(site.is_registered(Member))
 
@@ -33,6 +23,35 @@ class MemberAdminTests(TestCase):
     def test_Member_model_is_registered_with_MemberAdmin(self):
         model = site._registry.get(Member)  # pylint: disable=protected-access
         self.assertIsInstance(model, MemberAdmin)
+
+
+class MemberAdminAttributesTests(TestCase):
+    def setUp(self):
+        admin_site = AdminSite()
+        self.admin = MemberAdmin(Member, admin_site)
+
+    def test_list_display_attribute_is_assigned_to_a_tuple(self):
+        self.assertIsInstance(
+            self.admin.list_display,
+            tuple
+        )
+
+    def test_list_display_attribute_has_correct_fields_order(self):
+        fields = self.admin.list_display
+        expected_fields = ('__str__', 'remaining_days')
+        self.assertEqual(fields, expected_fields)
+
+
+class MemberAdminMethodsTests(TestCase):
+    def setUp(self):
+        admin_site = AdminSite()
+        self.admin = MemberAdmin(Member, admin_site)
+        # NOTE: Mixer sets models.field(default) if no value assigned.
+        self.member = mixer.blend(
+            'gym.Member',
+            is_cleaned=True,  # Call save() default behavior.
+            end_date=datetime.datetime.now() + datetime.timedelta(days=1)
+        )
 
     def test_admin_has_remaining_days_method(self):
         """
@@ -51,14 +70,3 @@ class MemberAdminTests(TestCase):
             self.admin.remaining_days(self.member),
             0
         )
-
-    def test_list_display_attribute_assigned_to_a_tuple_datatype(self):
-        self.assertIsInstance(
-            self.admin.list_display,
-            tuple
-        )
-
-    def test_list_display_attribute_has_correct_fields_order(self):
-        fields = self.admin.list_display
-        expected_fields = ('__str__', 'remaining_days')
-        self.assertEqual(fields, expected_fields)

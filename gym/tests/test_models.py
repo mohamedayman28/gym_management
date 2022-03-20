@@ -14,7 +14,7 @@ from mixer.backend.django import Mixer
 mixer = Mixer(fake=False)
 
 
-class MemberTests(TestCase):
+class MemberModelUserAttributeTests(TestCase):
     def setUp(self):
         # NOTE: Mixer sets models.field(default) if no value assigned.
         self.member = mixer.blend(
@@ -24,24 +24,20 @@ class MemberTests(TestCase):
         )
         self.member_meta = self.member._meta  # pylint: disable=protected-access
 
-    def test_save_method_triggers_clean_method(self):
-        """
-        member.end_date must be in the future from member.enrolled_date by at
-        least 2 days.
-
-        save() does not make fields validation, so if ValidationError occur
-        that's mean that clean() is called.
-        """
-        self.member.end_date = datetime.datetime.now()
-        self.member.is_cleaned = False
-        with self.assertRaises(ValidationError):
-            self.member.save()
-
     def test_model_has_user_attribute(self):
         """
         If no attribute, FieldDoesNotExist will raise by default.
         """
         self.member_meta.get_field('user')
+
+    def test_user_attribute_is_assigned_to_OneToOneField(self):
+        self.fail('Stopper Here!!')
+
+    def test_OneToOneField_on_delete_argument_is_not_assigned_to_default_value(self):
+        self.fail('Stopped Here!!')
+
+    def test_OneToOneField_on_delete_argument_is_assigned_to_correct_value(self):
+        self.fail('Stopped Here!!')
 
     def test_user_attribute_has_a_relation(self):
         self.assertTrue(self.member_meta.get_field('user').is_relation)
@@ -66,17 +62,48 @@ class MemberTests(TestCase):
         with self.assertRaises(Member.DoesNotExist):
             Member.objects.get(user=user)
 
+
+class MemberModelFirstNameAttributeTests(TestCase):
+    def setUp(self):
+        # NOTE: Mixer sets models.field(default) if no value assigned.
+        member = mixer.blend(
+            'gym.Member',
+            is_cleaned=True,  # Call save() default behavior.
+            end_date=datetime.datetime.now() + datetime.timedelta(days=1)
+        )
+        self.member_meta = member._meta  # pylint: disable=protected-access
+
     def test_model_has_first_name_attribute(self):
         """
         If no attribute, FieldDoesNotExist will raise by default.
         """
         self.member_meta.get_field('first_name')
 
-    def test_first_name_attribute_has_10_as_max_length(self):
+    def test_name_attribute_is_assigned_to_CharField(self):
+        self.fail('Stopped Here!!')
+
+    def test_CharField_max_length_argument_is_not_assigned_to_default_value(self):
+        """
+        Default value is
+        """
+        self.fail('Stopped here!!')
+
+    def test_CharField_max_length_argument_is_assigned_to_correct_value(self):
         self.assertEqual(
             self.member_meta.get_field('first_name').max_length,
             10
         )
+
+
+class MemberModelGenderAttributeTests(TestCase):
+    def setUp(self):
+        # NOTE: Mixer sets models.field(default) if no value assigned.
+        self.member = mixer.blend(
+            'gym.Member',
+            is_cleaned=True,  # Call save() default behavior.
+            end_date=datetime.datetime.now() + datetime.timedelta(days=1)
+        )
+        self.member_meta = self.member._meta  # pylint: disable=protected-access
 
     def test_model_has_gender_attribute(self):
         """
@@ -102,10 +129,24 @@ class MemberTests(TestCase):
             self.member.full_clean()
 
     def test_gender_attribute_has_ml_as_default_value(self):
+        """
+        Default value is
+        """
         self.assertEqual(
             self.member_meta.get_field('gender').default,
             'ml'
         )
+
+
+class MemberModelEnrolledDateAttributeTests(TestCase):
+    def setUp(self):
+        # NOTE: Mixer sets models.field(default) if no value assigned.
+        self.member = mixer.blend(
+            'gym.Member',
+            is_cleaned=True,  # Call save() default behavior.
+            end_date=datetime.datetime.now() + datetime.timedelta(days=1)
+        )
+        self.member_meta = self.member._meta  # pylint: disable=protected-access
 
     def test_model_has_enrolled_date_attribute(self):
         """
@@ -113,11 +154,22 @@ class MemberTests(TestCase):
         """
         self.member_meta.get_field('enrolled_date')
 
-    def test_enrolled_date_attribute_has_today_default_value(self):
+    def test_enrolled_date_attribute_has_today_date_as_default_value(self):
         self.assertEqual(
             self.member_meta.get_field('enrolled_date').default,
             datetime.date.today
         )
+
+
+class MemberModelEndDateAttributeTests(TestCase):
+    def setUp(self):
+        # NOTE: Mixer sets models.field(default) if no value assigned.
+        self.member = mixer.blend(
+            'gym.Member',
+            is_cleaned=True,  # Call save() default behavior.
+            end_date=datetime.datetime.now() + datetime.timedelta(days=1)
+        )
+        self.member_meta = self.member._meta  # pylint: disable=protected-access
 
     def test_model_has_end_date_attribute(self):
         """
@@ -125,7 +177,7 @@ class MemberTests(TestCase):
         """
         self.member_meta.get_field('end_date')
 
-    def test_end_date_attribute_has_today_default_value(self):
+    def test_end_date_attribute_has_today_date_as_default_value(self):
         self.assertEqual(
             self.member_meta.get_field('enrolled_date').default,
             datetime.date.today
@@ -142,11 +194,56 @@ class MemberTests(TestCase):
         with self.assertRaises(ValidationError):
             self.member.full_clean()
 
-    def test_str_method_returns_expected_value(self):
+
+class MemberModelSaveMethodTests(TestCase):
+    def setUp(self):
+        # NOTE: Mixer sets models.field(default) if no value assigned.
+        self.member = mixer.blend(
+            'gym.Member',
+            is_cleaned=True,  # Call save() default behavior.
+            end_date=datetime.datetime.now() + datetime.timedelta(days=1)
+        )
+
+    def test_save_method_triggers_clean_method(self):
+        """
+        member.end_date must be in the future from member.enrolled_date by at
+        least 2 days.
+
+        save() does not make fields validation, so if ValidationError occur
+        that's mean that clean() is called.
+        """
+        self.member.end_date = datetime.datetime.now()
+        self.member.is_cleaned = False
+        with self.assertRaises(ValidationError):
+            self.member.save()
+
+
+class MemberModelStrMethodTests(TestCase):
+    def setUp(self):
+        # NOTE: Mixer sets models.field(default) if no value assigned.
+        self.member = mixer.blend(
+            'gym.Member',
+            is_cleaned=True,  # Call save() default behavior.
+            end_date=datetime.datetime.now() + datetime.timedelta(days=1)
+        )
+        self.member_meta = self.member._meta  # pylint: disable=protected-access
+
+    def test_str_method_returns_correct_value(self):
         self.assertEqual(
             self.member.__str__(),
             f'{self.member.first_name} {self.member.last_name}'
         )
+
+
+class MemberModelGetRemainingDaysMethodTests(TestCase):
+    def setUp(self):
+        # NOTE: Mixer sets models.field(default) if no value assigned.
+        self.member = mixer.blend(
+            'gym.Member',
+            is_cleaned=True,  # Call save() default behavior.
+            end_date=datetime.datetime.now() + datetime.timedelta(days=1)
+        )
+        self.member_meta = self.member._meta  # pylint: disable=protected-access
 
     def test_model_has_get_remaining_days_method(self):
         """
@@ -165,6 +262,17 @@ class MemberTests(TestCase):
             self.member.get_remaining_days(),
             0
         )
+
+
+class MemberModelGetGenderMethodTests(TestCase):
+    def setUp(self):
+        # NOTE: Mixer sets models.field(default) if no value assigned.
+        self.member = mixer.blend(
+            'gym.Member',
+            is_cleaned=True,  # Call save() default behavior.
+            end_date=datetime.datetime.now() + datetime.timedelta(days=1)
+        )
+        self.member_meta = self.member._meta  # pylint: disable=protected-access
 
     def test_model_has_get_gender_name_method(self):
         """

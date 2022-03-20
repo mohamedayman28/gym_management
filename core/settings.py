@@ -40,6 +40,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # Local apps
     'gym.apps.GymConfig',
+    # Third party
+    'rest_framework',
+    'rest_framework.authtoken',
+    'dj_rest_auth',
+    'debug_toolbar',
 ]
 
 MIDDLEWARE = [
@@ -51,6 +56,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # Third party
+    # NOTE: To check that there is no unnecessary SQL query from the browser.
+    # NOTE: To check the API SQL quires from the browser,
+    # deactivate the permission and authentication on targeted view.
+    'debug_toolbar.middleware.DebugToolbarMiddleware',  # Django debug toolbar.
 ]
 
 ROOT_URLCONF = 'core.urls'

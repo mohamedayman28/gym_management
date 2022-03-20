@@ -7,7 +7,24 @@ from gym.models import Member
 from mixer.backend.django import mixer
 
 
-class MemberFormMetaAttributesTests(TestCase):
+class MemberSerializerAttributeTests(TestCase):
+    def test_serializer_has_member_id_attribute(self):
+        self.fail('Stopped here!!')
+
+    def test_member_id_attribute_is_assigned_to_IntegerField(self):
+        self.fail('Stopped here!!')
+
+    def test_IntegerField_default_argument_is_not_assigned_to_default_value(self):
+        """
+        Default argument is IntegerField(source= ) and its default value is
+        """
+        self.fail('Stopped here!!')
+
+    def test_IntegerField_default_argument_is_assigned_to_correct_value(self):
+        self.fail('Stopped here!!')
+
+
+class MemberSerializerMetaAttributesTests(TestCase):
     def setUp(self):
         self.meta_class = MemberForm.Meta
 
@@ -53,7 +70,7 @@ class MemberFormMetaAttributesTests(TestCase):
         self.assertEqual(expected_fields, current_fields)
 
 
-class MemberFormFieldsTests(TestCase):
+class MemberSerializerFieldsTests(TestCase):
     def setUp(self):
         self.user = mixer.blend('auth.User')
 

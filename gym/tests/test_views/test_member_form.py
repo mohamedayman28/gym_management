@@ -6,21 +6,17 @@ from django.views.generic.edit import CreateView
 # Local apps
 from gym.forms import MemberForm
 from gym.views import MemberFormView
-# Third party
-from mixer.backend.django import mixer
 
 
-class MemberFormViewTests(TestCase):
-    def setUp(self):
-        self.view_name = reverse('gym:member_form')
-        self.view_class = resolve(self.view_name).func.view_class
-        # Create User and login.
-        self.user = mixer.blend('auth.User')
-        self.client.force_login(self.user)
-
+class MemberFormViewUrlResolveTests(TestCase):
     def test_url_resolves_to_view(self):
-        self.assertIs(self.view_class, MemberFormView)
+        view_name = reverse('gym:member_form')
+        view_class = resolve(view_name).func.view_class
 
+        self.assertIs(view_class, MemberFormView)
+
+
+class MemberFormViewInheritanceTests(TestCase):
     def test_view_inherits_from_mixins_LoginRequiredMixin(self):
         mixins = LoginRequiredMixin
         view = MemberFormView
@@ -35,22 +31,32 @@ class MemberFormViewTests(TestCase):
             view, 'is not a subclass of ', generic
         )
 
-    def test_login_url_attribute_assigned_to_login_namespace(self):
-        namespace = self.view_class.login_url
+
+class MemberFormViewAttributesTests(TestCase):
+    def setUp(self):
+        view_name = reverse('gym:member_form')
+        self.view_class = resolve(view_name).func.view_class
+
+    def test_login_url_attribute_is_assigned_to_login_namespace(self):
         expected_namespace = reverse('gym:login')
-        self.assertEqual(namespace, expected_namespace)
+        current_namespace = self.view_class.login_url
 
-    def test_template_name_attribute_assigned_to_member_form_string(self):
-        string = self.view_class.template_name
+        self.assertEqual(expected_namespace, current_namespace)
+
+    def test_template_name_attribute_is_assigned_to_member_form_string(self):
+        current_string = self.view_class.template_name
         expected_string = 'member_form.html'
-        self.assertEqual(string, expected_string)
 
-    def test_form_class_attribute_assigned_to_MemberForm_form(self):
-        form = self.view_class.form_class
+        self.assertEqual(expected_string, current_string)
+
+    def test_form_class_attribute_is_assigned_to_MemberForm_form(self):
+        current_form = self.view_class.form_class
         expected_form = MemberForm
-        self.assertIs(form, expected_form)
 
-    def test_success_url_attribute_assigned_to_index_namespace(self):
-        namespace = self.view_class.success_url
+        self.assertIs(expected_form, current_form)
+
+    def test_success_url_attribute_is_assigned_to_index_namespace(self):
+        current_namespace = self.view_class.success_url
         expected_namespace = reverse('gym:index')
-        self.assertEqual(namespace, expected_namespace)
+
+        self.assertEqual(expected_namespace, current_namespace)

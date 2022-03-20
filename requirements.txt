@@ -1,2 +1,5 @@
 mixer==7.2.0
 Django==3.2.9
+djangorestframework==3.13.1
+dj-rest-auth==2.2.3
+django-debug-toolbar==3.2.4

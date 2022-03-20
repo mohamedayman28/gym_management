@@ -1,5 +1,5 @@
 # Django
-from django.urls import path
+from django.urls import path, include
 # Local apps
 from gym import views
 
@@ -13,4 +13,6 @@ urlpatterns = [
     path('member/<int:pk>/update/', views.MemberUpdateView.as_view(), name='member_update'),
     path('login/', views.LoginView.as_view(), name='login'),
     path('logout/', views.LogoutView.as_view(), name='logout'),
+    # API
+    path("api/", include('gym.api.urls'))
 ]

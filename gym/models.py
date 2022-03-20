@@ -8,10 +8,6 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 
-class test(models.Model):
-    name = models.CharField(max_length=10)
-
-
 class Member(models.Model):
     MALE = 'ml'
     FEMALE = 'fl'
@@ -38,16 +34,19 @@ class Member(models.Model):
 
     is_cleaned = False
 
-    def clean(self):
+    def clean(self, *args, **kwargs):
         self.is_cleaned = True
         raise_message = 'The date must be in the future by at least one day.'
         if self.end_date <= (self.enrolled_date):
             raise ValidationError({'end_date': _(raise_message)})
+        else:
+            super().save(*args, **kwargs)
+
 
     def save(self, *args, **kwargs):
         """
-        Create fields validation in case of calling save() out of form, for
-        example calling save() from within a Django shell.
+        Clean fields in case of calling save() directly, for example calling
+        save() from within a Django shell.
         """
         if self.is_cleaned is False:
             self.full_clean()

@@ -9,7 +9,3 @@ class MemberForm(forms.ModelForm):
         model = Member
         fields = ['user', 'first_name', 'last_name',
                   'gender', 'enrolled_date', 'end_date']
-
-
-class FormDummy(forms.Form):
-    last_name = forms.CharField(max_length=10)
