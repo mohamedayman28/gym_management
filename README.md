@@ -15,7 +15,7 @@ Django + htmx(Ajax library) CRUD app that covers:
 
 ## Setting up locally
 
-To set the site up locally, you'll need to have Python 3.6 or higher version installed on your local machine. Once that is done and ready, proceed to download the repository with the next steps.
+Need to have Python 3.6 or higher installed. Then download the repository with the next steps.
 
 ### 1. Create development directory
 
