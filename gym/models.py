@@ -31,7 +31,8 @@ class Member(models.Model):
 
     def __str__(self):
         return '{} {}'.format(self.first_name, self.last_name)
-
+    
+    # Trigger for full_clean() in case of calling save() directly, for example using Django shell.
     is_cleaned = False
 
     def clean(self, *args, **kwargs):
@@ -45,8 +46,7 @@ class Member(models.Model):
 
     def save(self, *args, **kwargs):
         """
-        Clean fields in case of calling save() directly, for example calling
-        save() from within a Django shell.
+        Clean fields in case of calling save() directly, for example using Django shell.
         """
         if self.is_cleaned is False:
             self.full_clean()
